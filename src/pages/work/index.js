@@ -10,7 +10,7 @@ import {
   useGithubToolbarPlugins,
 } from 'react-tinacms-github';
 
-import { useCMS, usePlugin, withPlugin } from 'tinacms';
+import { useCMS, usePlugin } from 'tinacms';
 import ProjectCreatorPlugin from 'cms/plugins/ProjectCreatorPlugin';
 
 const PROJECTS = [
@@ -60,7 +60,7 @@ const PROJECTS = [
 
 const Work = ({ file, preview }) => {
   const formOptions = {
-    label: 'Home Page',
+    label: 'Work Page',
     fields: [
       {
         label: 'Hero Image',
@@ -79,8 +79,8 @@ const Work = ({ file, preview }) => {
   };
 
   const [data, form] = useGithubJsonForm(file, formOptions);
-  usePlugin(form);
-  // usePlugin(ProjectCreatorPlugin);
+  // usePlugin(form);
+  usePlugin(ProjectCreatorPlugin);
 
   useGithubToolbarPlugins();
 
@@ -117,7 +117,7 @@ export async function getStaticProps({ preview, previewData }) {
   };
 }
 
-export default withPlugin(Work, ProjectCreatorPlugin);
+export default Work;
 
 const Hero = () => {
   return (
@@ -152,7 +152,7 @@ const Hero = () => {
 const ProjectList = ({ data }) => {
   return (
     <>
-      <style>{`
+      {/* <style>{`
         .project:nth-of-type(5n) {
             grid-column: 1 / -1;
         }
@@ -172,7 +172,7 @@ const ProjectList = ({ data }) => {
 {
   content: '';
 }
-    `}</style>
+    `}</style> */}
       <section className="min-h-screen pt-24 bg-white">
         <div className="sm:px-4 container mx-auto">
           <ul className="grid sm:gap-4 gap-8 grid-cols-2">
