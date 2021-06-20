@@ -18,6 +18,8 @@ import {
 
 import { NextGithubMediaStore } from 'next-tinacms-github';
 
+import ProjectCreatorPlugin from '../cms/plugins/ProjectCreatorPlugin';
+
 import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
 
@@ -47,6 +49,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     cms.plugins.add(HtmlFieldPlugin);
     cms.plugins.add(MarkdownFieldPlugin);
+    cms.plugins.add(ProjectCreatorPlugin);
   }, [cms]);
 
   const onLogin = async () => {
