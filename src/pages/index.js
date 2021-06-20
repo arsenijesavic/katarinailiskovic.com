@@ -3,10 +3,7 @@ import {
   parseJson,
 } from 'next-tinacms-github';
 
-import {
-  useGithubJsonForm,
-  useGithubToolbarPlugins,
-} from 'react-tinacms-github';
+import { useGithubJsonForm } from 'react-tinacms-github';
 import { usePlugin } from 'tinacms';
 
 const Index = ({ file, preview }) => {
@@ -31,8 +28,6 @@ const Index = ({ file, preview }) => {
 
   const [data, form] = useGithubJsonForm(file, formOptions);
   usePlugin(form);
-
-  useGithubToolbarPlugins();
 
   const { image, title, subtitle } = data;
 
