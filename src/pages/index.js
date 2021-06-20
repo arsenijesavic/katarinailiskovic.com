@@ -11,21 +11,23 @@ import { usePlugin } from 'tinacms';
 const Index = ({ file, preview }) => {
   const formOptions = {
     label: 'Home Page',
-    fields: [{ name: 'title', component: 'text' }],
+    fields: [
+      { name: 'title', component: 'textarea' },
+      { name: 'subtitle', component: 'textarea' },
+    ],
   };
 
-  /*
-   ** Register a JSON Tina Form
-   */
   const [data, form] = useGithubJsonForm(file, formOptions);
   usePlugin(form);
 
   useGithubToolbarPlugins();
 
-  console.log(data);
+  const { title, subtitle } = data;
+
+  console.log(JSON.stringify(subtitle));
   return (
     <>
-      <Hero />
+      <Hero {...{ title, subtitle }} />
       <Work />
       <Services />
       <About />
@@ -36,7 +38,6 @@ const Index = ({ file, preview }) => {
 
 export async function getStaticProps({ preview, previewData }) {
   if (preview) {
-    console.log(preview, previewData);
     return getGithubPreviewProps({
       ...previewData,
       fileRelativePath: 'content/home.json',
@@ -59,18 +60,21 @@ export async function getStaticProps({ preview, previewData }) {
 
 export default Index;
 
-const Hero = () => {
+const Hero = ({ title, subtitle }) => {
   return (
     <header className="w-full min-h-screen max-h-screen relative flex flex-col justify-center text-white">
       <div className="relative z-10 container mx-auto">
-        <h2 className="text-6xl leading-normal">
-          Still life’s that will make <br /> your product feel alive.
+        <h2 className="text-6xl leading-normal whitespace-pre">
+          {/* Still life’s that will make <br /> your product feel alive. */}
+          {title}
         </h2>
         <p className="mt-4 text-2xl leading-normal">
-          I’m a product photographer helping brands communicate
+          {/* I’m a product photographer helping brands communicate
           <br />
           their values in a candid, subtile and sophisticated
-          language.
+          language. */}
+
+          {subtitle}
         </p>
 
         <button className="bg-accent-indigo hover:bg-blue-700 text-white text-xl font-bold py-3 px-8 rounded-full mt-6">
