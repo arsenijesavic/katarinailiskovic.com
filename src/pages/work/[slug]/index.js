@@ -274,7 +274,8 @@ export async function getStaticProps({
         parse: parseJson,
       });
     } catch (error) {
-      console.log(error);
+      console.error(values, key, index);
+      error;
     }
   }
 

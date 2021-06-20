@@ -97,7 +97,6 @@ export class MarkdownCreatorPlugin {
   async onSubmit(form, cms) {
     const fileRelativePath = await this.filename(form);
     const content = await this.body(form);
-    console.log({ fileRelativePath, content });
     try {
       // await cms.api.github?.onChange({
       //   fileRelativePath,

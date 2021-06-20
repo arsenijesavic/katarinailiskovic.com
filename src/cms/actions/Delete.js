@@ -9,7 +9,6 @@ export default function DeleteAction({ form }) {
           return;
         }
 
-        console.log(cms.api.github.onDelete, form);
         // await cms.api.github.onDelete({
         //   relPath: form.values.fileRelativePath,
         // });

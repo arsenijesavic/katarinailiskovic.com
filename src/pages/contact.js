@@ -10,45 +10,10 @@ import {
 } from 'next-tinacms-github';
 
 const ContactPage = ({ file }) => {
-  const formConfig = {
-    fields: [
-      {
-        label: 'Hero Image',
-        name: 'image',
-        component: 'image',
-        parse: (media) => {
-          return media.previewSrc;
-        },
-
-        // Decide the file upload directory for the post
-        // uploadDir: () => '/public/static/',
-
-        // Generate the src attribute for the preview image.
-        previewSrc: (src) => src,
-      },
-
-      {
-        name: 'title',
-        label: 'Title',
-        component: 'textarea',
-      },
-
-      {
-        name: 'headline',
-        label: 'Headline',
-        component: 'text',
-      },
-
-      {
-        name: 'body',
-        label: 'Body',
-        component: 'markdown',
-      },
-    ],
+  const [data, form] = useGithubJsonForm(file, {
+    fields: [],
     label: 'Contact',
-  };
-
-  const [data, form] = useGithubJsonForm(file, formConfig);
+  });
 
   usePlugin(form);
 
@@ -70,7 +35,7 @@ const ContactPage = ({ file }) => {
         </div>
       </header> */}
 
-      <section className="container mx-auto py-24 flex justify-between items-start">
+      <header className="container mx-auto py-24 flex justify-between items-start">
         <div className="flex-1 pr-8">
           <div className="prose prose-2xl">
             <InlineForm form={form}>
@@ -82,53 +47,49 @@ const ContactPage = ({ file }) => {
         </div>
 
         <div className="w-6/12">
-          <form className="">
-            <div className="mt-8 max-w-md">
-              <div className="grid grid-cols-1 gap-6">
-                <label className="block">
-                  <span className="text-gray-700">Full name</span>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
-                    placeholder=""
-                  />
-                </label>
-                <label className="block">
-                  <span className="text-gray-700">Email address</span>
-                  <input
-                    type="email"
-                    className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
-                    placeholder="john@example.com"
-                  />
-                </label>
-                <label className="block">
-                  <span className="text-gray-700">
-                    I’m interested in
-                  </span>
-                  <select className="block w-full mt-1 rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0">
-                    <option>Corporate event</option>
-                    <option>Wedding</option>
-                    <option>Birthday</option>
-                    <option>Other</option>
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="text-gray-700">Message</span>
-                  <textarea
-                    className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
-                    rows="6"
-                  ></textarea>
-                </label>
-
-                <button className="bg-accent-indigo hover:bg-opacity-80 text-white text-xl font-bold py-3 px-8 rounded-full mt-6">
-                  Submit
-                </button>
-              </div>
+          <form className="mt-8 max-w-md">
+            <div className="grid grid-cols-1 gap-6">
+              <label className="block">
+                <span className="text-gray-700">Full name</span>
+                <input
+                  type="text"
+                  className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                  placeholder=""
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700">Email address</span>
+                <input
+                  type="email"
+                  className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                  placeholder="john@example.com"
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700">
+                  I’m interested in
+                </span>
+                <select className="block w-full mt-1 rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0">
+                  <option>Corporate event</option>
+                  <option>Wedding</option>
+                  <option>Birthday</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label className="block">
+                <span className="text-gray-700">Message</span>
+                <textarea
+                  className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                  rows="6"
+                ></textarea>
+              </label>
+              <button className="bg-accent-indigo hover:bg-opacity-80 text-white text-xl font-bold py-3 px-8 rounded-full mt-6">
+                Submit
+              </button>
             </div>
           </form>
         </div>
-      </section>
+      </header>
     </>
   );
 };
@@ -144,7 +105,7 @@ export async function getStaticProps({ preview, previewData }) {
         parse: parseJson,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

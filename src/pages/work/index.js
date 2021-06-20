@@ -46,7 +46,6 @@ import Link from 'next/link';
 // ];
 
 const Work = ({ data, preview }) => {
-  console.log(data);
   return (
     <>
       {/* <Hero /> */}
@@ -55,7 +54,7 @@ const Work = ({ data, preview }) => {
   );
 };
 
-export async function getStaticProps({ preview }) {
+export async function getStaticProps({ preview = false }) {
   if (preview) {
     try {
       return getGithubPreviewProps({
@@ -64,7 +63,7 @@ export async function getStaticProps({ preview }) {
         parse: parseJson,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -80,7 +79,6 @@ export async function getStaticProps({ preview }) {
         .join('.');
       const value = values[index];
 
-      console.log(values, key, index);
       // Parse yaml metadata & markdownbody in document
       // const document = matter(value.default)
       return {

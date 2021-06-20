@@ -10,39 +10,10 @@ import {
 } from 'next-tinacms-github';
 
 const About = ({ file }) => {
-  const formConfig = {
-    fields: [
-      {
-        label: 'Image',
-        name: 'image',
-        component: 'image',
-        parse: (media) => media.previewSrc,
-        // uploadDir: () => '/public/static/',
-        previewSrc: (src) => src,
-      },
-
-      {
-        name: 'title',
-        label: 'Title',
-        component: 'textarea',
-      },
-
-      {
-        name: 'headline',
-        label: 'Headline',
-        component: 'text',
-      },
-
-      {
-        name: 'body',
-        label: 'Body',
-        component: 'markdown',
-      },
-    ],
+  const [data, form] = useGithubJsonForm(file, {
+    fields: [],
     label: 'About',
-  };
-
-  const [data, form] = useGithubJsonForm(file, formConfig);
+  });
 
   usePlugin(form);
 
@@ -84,7 +55,7 @@ export async function getStaticProps({ preview, previewData }) {
         parse: parseJson,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
