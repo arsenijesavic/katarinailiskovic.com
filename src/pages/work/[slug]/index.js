@@ -164,8 +164,6 @@ export const fields = [
 ];
 
 const Project = ({ file, preview }) => {
-  const cms = useCMS();
-
   const formConfig = {
     actions: [DeleteAction],
     fields,

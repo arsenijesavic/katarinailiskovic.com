@@ -1,32 +1,23 @@
 import Markdown from 'react-markdown';
-import { useCMS, useForm, usePlugin } from 'tinacms';
+
+import { usePlugin } from 'tinacms';
 import { InlineForm } from 'react-tinacms-inline';
 import { InlineWysiwyg } from 'react-tinacms-editor';
+import { useGithubJsonForm } from 'react-tinacms-github';
+import {
+  getGithubPreviewProps,
+  parseJson,
+} from 'next-tinacms-github';
 
-const About = () => {
-  const cms = useCMS();
-
+const About = ({ file }) => {
   const formConfig = {
-    id: 10,
-    label: 'Hero',
-    initialValues: {
-      title: 'Visuals form identity & speak \nfor your brand.',
-      headline: '',
-      body: `# Meet me\n\nFirst of all I’m a big admirer and collector of everyday object with the beliefe that they can envoke emotions in the viewer’s eyes. \n\nA still life and product photographer working solo or in the asisstence of my two dogs. My practise focuses on setting direction in your content through sensibility, colors and set design. \n\nInternational availablilty gives me opportunity to meet and work with passionate product owners all around the world. You are a product owner? I love to hear your story.`,
-    },
     fields: [
       {
-        label: 'Hero Image',
+        label: 'Image',
         name: 'image',
         component: 'image',
-        parse: (media) => {
-          return media.previewSrc;
-        },
-
-        // Decide the file upload directory for the post
+        parse: (media) => media.previewSrc,
         // uploadDir: () => '/public/static/',
-
-        // Generate the src attribute for the preview image.
         previewSrc: (src) => src,
       },
 
@@ -48,18 +39,11 @@ const About = () => {
         component: 'markdown',
       },
     ],
-    onSubmit: async (values) => {
-      try {
-        cms.alerts.success('Changes Saved!');
-      } catch (error) {
-        cms.alerts.error('Uh oh something went wrong!');
-      }
-
-      return Promise.resolve();
-    },
+    label: 'About',
   };
 
-  const [values, form] = useForm(formConfig);
+  const [data, form] = useGithubJsonForm(file, formConfig);
+
   usePlugin(form);
 
   return (
@@ -69,7 +53,7 @@ const About = () => {
           <div className="prose prose-xl">
             <InlineForm form={form}>
               <InlineWysiwyg name="body" format="markdown">
-                <Markdown>{values.body}</Markdown>
+                <Markdown>{data?.body}</Markdown>
               </InlineWysiwyg>
             </InlineForm>
           </div>
@@ -89,13 +73,32 @@ const About = () => {
   );
 };
 
-export async function getStaticProps({ params, preview = false }) {
+export async function getStaticProps({ preview, previewData }) {
+  const fileRelativePath = `/content/about.json'`;
+
+  if (preview) {
+    try {
+      return getGithubPreviewProps({
+        ...previewData,
+        fileRelativePath,
+        parse: parseJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const data = await import('../../content/about.json');
+
   return {
     props: {
-      preview: true,
+      preview: false,
+      file: {
+        fileRelativePath,
+        data: data?.default,
+      },
     },
-    // revalidate: 10,
+    revalidate: 10,
   };
 }
-
 export default About;
