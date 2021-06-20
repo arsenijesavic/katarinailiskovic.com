@@ -84,8 +84,9 @@ export function DeleteAction({ form }) {
 
 const Work = ({ file, preview }) => {
   const formOptions = {
-    actions: [DeleteAction],
     label: 'Work Page',
+    actions: [DeleteAction],
+
     fields: [
       {
         label: 'Hero Image',
@@ -104,7 +105,7 @@ const Work = ({ file, preview }) => {
   };
 
   const [data, form] = useGithubJsonForm(file, formOptions);
-  // usePlugin(form);
+  usePlugin(form);
   usePlugin(ProjectCreatorPlugin);
 
   useGithubToolbarPlugins();
@@ -120,19 +121,17 @@ const Work = ({ file, preview }) => {
 };
 
 export async function getStaticProps({ preview, previewData }) {
-  // if (preview) {
-  //   try {
-  //     const d = await getGithubPreviewProps({
-  //       ...previewData,
-  //       fileRelativePath: 'content/work/test.json',
-  //       parse: parseJson,
-  //     });
-
-  //     console.log(d);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  if (preview) {
+    try {
+      return getGithubPreviewProps({
+        ...previewData,
+        fileRelativePath: 'content/work/test.json',
+        parse: parseJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const projects = ((context) => {
     const keys = context.keys();

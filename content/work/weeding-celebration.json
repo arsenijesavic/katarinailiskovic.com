@@ -1,0 +1,14 @@
+{
+  "title": "Meditation",
+  "tags": ["client", "weeding", "still life", "editorial"],
+  "summary": "This was a project that I wanted to do for a long time. Experimenting with light, glass and water. This was a project that I wanted to do for a long time. Experimenting with light, glass and water.",
+  "blocks": [
+    { "_template": "image", "src": "/project1.png" },
+    {
+      "_template": "gallery",
+      "src": "/project1.png",
+      "images": [{ "src": "/work1.png" }, { "src": "/work2.png" }]
+    },
+    { "_template": "image", "src": "/project2.png" }
+  ]
+}

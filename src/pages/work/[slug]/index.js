@@ -3,6 +3,15 @@ import Image from 'next/image';
 
 import Link from 'next/link';
 
+import {
+  getGithubPreviewProps,
+  parseJson,
+} from 'next-tinacms-github';
+import {
+  useGithubJsonForm,
+  useGithubToolbarPlugins,
+} from 'react-tinacms-github';
+
 import { useForm, usePlugin, useCMS } from 'tinacms';
 import {
   BlocksControls,
@@ -158,26 +167,13 @@ export const fields = [
   // },
 ];
 
-const Project = () => {
+const Project = ({ file, preview }) => {
   const cms = useCMS();
 
   const formConfig = {
     id: 10,
     label: 'Hero',
-    initialValues: {
-      title: 'Meditation',
-      tags: ['client', 'weeding', 'still life', 'editorial'],
-      summary: `This was a project that I wanted to do for a long time. Experimenting with light, glass and water. This was a project that I wanted to do for a long time. Experimenting with light, glass and water.`,
-      blocks: [
-        { _template: 'image', src: '/project1.png' },
-        {
-          _template: 'gallery',
-          src: '/project1.png',
-          images: [{ src: '/work1.png' }, { src: '/work2.png' }],
-        },
-        { _template: 'image', src: '/project2.png' },
-      ],
-    },
+    initialValues: {},
     fields,
     onSubmit: async (values) => {
       try {
@@ -190,9 +186,11 @@ const Project = () => {
     },
   };
 
-  const [values, form] = useForm(formConfig);
+  const [data, form] = useGithubJsonForm(file, formOptions);
+
   usePlugin(form);
 
+  console.log(data);
   const moreProjects = [
     { title: 'Soap', href: 'soap', image: { src: '/more1.png' } },
     {
@@ -255,22 +253,55 @@ const Project = () => {
 };
 
 export async function getStaticPaths() {
-  const paths = ['/work/weeding-celebration'];
+  const projects = ((context) => {
+    const keys = context.keys();
+    const values = keys.map(context);
+    const data = keys.map((key, index) => {
+      // Create slug from filename
+      const slug = key
+        .replace(/^.*[\\\/]/, '')
+        .split('.')
+        .slice(0, -1)
+        .join('.');
+      const value = values[index];
+      // Parse yaml metadata & markdownbody in document
+
+      return { slug, ...value };
+    });
+    return data;
+  })(require.context(`../../../../content/work`, true, /\.json$/));
+
+  const paths = projects.map((_) => `/work/${_.slug}`);
+  console.log(paths);
   return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({
   params,
-  preview = false,
+  preview,
   previewData,
 }) {
-  // const { data } = await apollo.query({
-  //   query: TRIP,
-  //   variables: { slug: params.id },
-  // })
+  const fileRelativePath = `content/work/${params.slug}`;
+  console.log(fileRelativePath);
+  if (preview) {
+    try {
+      return getGithubPreviewProps({
+        ...previewData,
+        fileRelativePath,
+        parse: parseJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return {
     props: {
-      preview: true,
+      preview: false,
+      file: {
+        fileRelativePath,
+        data: data?.default,
+      },
     },
     // revalidate: 10,
   };

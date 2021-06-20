@@ -46,6 +46,8 @@
 
 import { fields } from '../../pages/work/[slug]';
 
+import { ActionButton, useCMS, usePlugin } from 'tinacms';
+
 export const getCachedFormData = (id) => {
   if (typeof localStorage === 'undefined') {
     return {};
@@ -63,6 +65,7 @@ export const setCachedFormData = (id, data) => {
 export class MarkdownCreatorPlugin {
   __type = 'content-creator';
   name;
+
   fields;
 
   afterCreate;
