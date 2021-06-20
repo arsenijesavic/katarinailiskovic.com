@@ -6,10 +6,28 @@ module.exports = {
 
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      content: {
+        slash: '/',
+      },
+      colors: {
+        'accent-cream': '#FFF6DF',
+        'accent-green': '#47C9BA',
+        'accent-indigo': '#614CE3',
+        'accent-purple': '#C5B5F1',
+      },
+      fontFamily: {
+        display: ['Coconat', 'sans-serif'],
+        body: ['Montserrat', 'sans-serif'],
+      },
+    },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+  ],
 };
