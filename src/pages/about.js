@@ -74,7 +74,7 @@ const About = ({ file }) => {
 };
 
 export async function getStaticProps({ preview, previewData }) {
-  const fileRelativePath = `/content/about.json'`;
+  const fileRelativePath = `content/about.json`;
 
   if (preview) {
     try {
@@ -101,4 +101,5 @@ export async function getStaticProps({ preview, previewData }) {
     revalidate: 10,
   };
 }
+
 export default About;

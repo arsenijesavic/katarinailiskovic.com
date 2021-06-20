@@ -1,19 +1,16 @@
 import Markdown from 'react-markdown';
-import { useCMS, useForm, usePlugin } from 'tinacms';
+import { usePlugin } from 'tinacms';
 import { InlineForm } from 'react-tinacms-inline';
 import { InlineWysiwyg } from 'react-tinacms-editor';
 
-const Services = () => {
-  const cms = useCMS();
+import { useGithubJsonForm } from 'react-tinacms-github';
+import {
+  getGithubPreviewProps,
+  parseJson,
+} from 'next-tinacms-github';
 
+const ContactPage = ({ file }) => {
   const formConfig = {
-    id: 10,
-    label: 'Hero',
-    initialValues: {
-      title: 'Visuals form identity & speak \nfor your brand.',
-      headline: `Meet me`,
-      body: `For work inquiries, collaborations or licensing an image, please fill the application or email me directly at [iliskovickatarina@gmail.com](mailto:iliskovickatarina@gmail.com) and I’ll get back to you within one business day.`,
-    },
     fields: [
       {
         label: 'Hero Image',
@@ -48,18 +45,11 @@ const Services = () => {
         component: 'markdown',
       },
     ],
-    onSubmit: async (values) => {
-      try {
-        cms.alerts.success('Changes Saved!');
-      } catch (error) {
-        cms.alerts.error('Uh oh something went wrong!');
-      }
-
-      return Promise.resolve();
-    },
+    label: 'Contact',
   };
 
-  const [values, form] = useForm(formConfig);
+  const [data, form] = useGithubJsonForm(file, formConfig);
+
   usePlugin(form);
 
   return (
@@ -67,7 +57,7 @@ const Services = () => {
       {/* <header className="w-full min-h-screen max-h-screen relative flex flex-col justify-center text-white">
         <div className="container mx-auto relative z-10">
           <h2 className="text-6xl leading-normal whitespace-pre">
-            {values?.title}
+            {data?.?.title}
           </h2>
         </div>
 
@@ -85,7 +75,7 @@ const Services = () => {
           <div className="prose prose-2xl">
             <InlineForm form={form}>
               <InlineWysiwyg name="body" format="markdown">
-                <Markdown>{values.body}</Markdown>
+                <Markdown>{data?.body}</Markdown>
               </InlineWysiwyg>
             </InlineForm>
           </div>
@@ -143,13 +133,33 @@ const Services = () => {
   );
 };
 
-export async function getStaticProps({ params, preview = false }) {
+export async function getStaticProps({ preview, previewData }) {
+  const fileRelativePath = `content/contact.json`;
+
+  if (preview) {
+    try {
+      return getGithubPreviewProps({
+        ...previewData,
+        fileRelativePath,
+        parse: parseJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const data = await import('../../content/contact.json');
+
   return {
     props: {
       preview: false,
+      file: {
+        fileRelativePath,
+        data: data?.default,
+      },
     },
-    // revalidate: 10,
+    revalidate: 10,
   };
 }
 
-export default Services;
+export default ContactPage;
