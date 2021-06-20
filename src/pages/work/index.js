@@ -1,7 +1,17 @@
-import Head from 'next/head';
-import Image from 'next/image';
-
+import { useEffect } from 'react';
 import Link from 'next/link';
+
+import {
+  getGithubPreviewProps,
+  parseJson,
+} from 'next-tinacms-github';
+import {
+  useGithubJsonForm,
+  useGithubToolbarPlugins,
+} from 'react-tinacms-github';
+
+import { useCMS, usePlugin, withPlugin } from 'tinacms';
+import ProjectCreatorPlugin from 'cms/plugins/ProjectCreatorPlugin';
 
 const PROJECTS = [
   {
@@ -48,7 +58,34 @@ const PROJECTS = [
   },
 ];
 
-const Work = () => {
+const Work = ({ file, preview }) => {
+  const formOptions = {
+    label: 'Home Page',
+    fields: [
+      {
+        label: 'Hero Image',
+        name: 'image',
+        component: 'image',
+        parse: (media) => media.previewSrc,
+        // Decide the file upload directory for the post
+        // uploadDir: () => '/public/static/',
+
+        // Generate the src attribute for the preview image.
+        previewSrc: (src) => src,
+      },
+      { label: 'Title', name: 'title', component: 'textarea' },
+      { label: 'Subtitle', name: 'subtitle', component: 'textarea' },
+    ],
+  };
+
+  const [data, form] = useGithubJsonForm(file, formOptions);
+  usePlugin(form);
+  // usePlugin(ProjectCreatorPlugin);
+
+  useGithubToolbarPlugins();
+
+  const cms = useCMS();
+
   return (
     <>
       {/* <Hero /> */}
@@ -57,7 +94,30 @@ const Work = () => {
   );
 };
 
-export default Work;
+export async function getStaticProps({ preview, previewData }) {
+  if (preview) {
+    return getGithubPreviewProps({
+      ...previewData,
+      fileRelativePath: 'content/home.json',
+      parse: parseJson,
+    });
+  }
+
+  const data = await import('../../../content/home.json');
+
+  console.log(data.default);
+  return {
+    props: {
+      preview: false,
+      file: {
+        fileRelativePath: 'content/home.json',
+        data: data?.default,
+      },
+    },
+  };
+}
+
+export default withPlugin(Work, ProjectCreatorPlugin);
 
 const Hero = () => {
   return (
