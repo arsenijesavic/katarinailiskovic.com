@@ -34,7 +34,7 @@ const Index = ({ file, preview }) => {
   useGithubToolbarPlugins();
 
   const { image, title, subtitle } = data;
-  console.log(data);
+
   return (
     <>
       <Hero {...{ image, title, subtitle }} />

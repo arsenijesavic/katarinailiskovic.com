@@ -41,7 +41,6 @@
 //   onSubmit(values, cms) {
 //     // Call functions that create the new blog post. For example:
 //     //   cms.apis.someBackend.createPost(values)
-//     console.log(cms);
 //   },
 // };
 
@@ -74,7 +73,6 @@ export class MarkdownCreatorPlugin {
   body;
 
   constructor(options) {
-    console.log('HERE');
     if (!options.filename) {
       console.error(MISSING_FILENAME_MESSAGE);
       throw new Error(MISSING_FILENAME_MESSAGE);
@@ -94,7 +92,6 @@ export class MarkdownCreatorPlugin {
   }
 
   async onSubmit(form, cms) {
-    console.log('HERE', cms);
     const fileRelativePath = `content/work/test.json`;
     const content = form;
 
@@ -122,7 +119,7 @@ export class MarkdownCreatorPlugin {
         this.afterCreate(response);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     // cms.api.github

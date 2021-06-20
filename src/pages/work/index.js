@@ -10,7 +10,7 @@ import {
   useGithubToolbarPlugins,
 } from 'react-tinacms-github';
 
-import { useCMS, usePlugin } from 'tinacms';
+import { ActionButton, useCMS, usePlugin } from 'tinacms';
 import ProjectCreatorPlugin from 'cms/plugins/ProjectCreatorPlugin';
 
 const PROJECTS = [
@@ -58,8 +58,33 @@ const PROJECTS = [
   },
 ];
 
+export function DeleteAction({ form }) {
+  const cms = useCMS();
+  return (
+    <ActionButton
+      onClick={async () => {
+        if (
+          !confirm(
+            `Are you sure you want to delete ${form.values.fileRelativePath}?`,
+          )
+        ) {
+          return;
+        }
+        await cms.api.github.onDelete({
+          relPath: form.values.fileRelativePath,
+        });
+
+        window.history.back();
+      }}
+    >
+      Delete
+    </ActionButton>
+  );
+}
+
 const Work = ({ file, preview }) => {
   const formOptions = {
+    actions: [DeleteAction],
     label: 'Work Page',
     fields: [
       {
@@ -95,18 +120,47 @@ const Work = ({ file, preview }) => {
 };
 
 export async function getStaticProps({ preview, previewData }) {
-  if (preview) {
-    console.log(previewData);
-    return getGithubPreviewProps({
-      ...previewData,
-      fileRelativePath: 'content/home.json',
-      parse: parseJson,
-    });
-  }
+  // if (preview) {
+  //   try {
+  //     const d = await getGithubPreviewProps({
+  //       ...previewData,
+  //       fileRelativePath: 'content/work/test.json',
+  //       parse: parseJson,
+  //     });
 
+  //     console.log(d);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  const projects = ((context) => {
+    const keys = context.keys();
+    const values = keys.map(context);
+    const data = keys.map((key, index) => {
+      // Create slug from filename
+      const slug = key
+        .replace(/^.*[\\\/]/, '')
+        .split('.')
+        .slice(0, -1)
+        .join('.');
+      const value = values[index];
+
+      console.log(values, key, index);
+      // Parse yaml metadata & markdownbody in document
+      // const document = matter(value.default)
+      return {
+        // document,
+        slug,
+        ...value,
+      };
+    });
+    return data;
+  })(require.context('../../../content/work', true, /\.json$/));
+
+  console.log(projects);
   const data = await import('../../../content/home.json');
 
-  console.log(data.default);
   return {
     props: {
       preview: false,
