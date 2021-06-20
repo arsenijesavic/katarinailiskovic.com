@@ -12,8 +12,19 @@ const Index = ({ file, preview }) => {
   const formOptions = {
     label: 'Home Page',
     fields: [
-      { name: 'title', component: 'textarea' },
-      { name: 'subtitle', component: 'textarea' },
+      {
+        label: 'Hero Image',
+        name: 'image',
+        component: 'image',
+        parse: (media) => media.previewSrc,
+        // Decide the file upload directory for the post
+        // uploadDir: () => '/public/static/',
+
+        // Generate the src attribute for the preview image.
+        previewSrc: (src) => src,
+      },
+      { label: 'Title', name: 'title', component: 'textarea' },
+      { label: 'Subtitle', name: 'subtitle', component: 'textarea' },
     ],
   };
 
@@ -22,12 +33,11 @@ const Index = ({ file, preview }) => {
 
   useGithubToolbarPlugins();
 
-  const { title, subtitle } = data;
-
-  console.log(JSON.stringify(subtitle));
+  const { image, title, subtitle } = data;
+  console.log(data);
   return (
     <>
-      <Hero {...{ title, subtitle }} />
+      <Hero {...{ image, title, subtitle }} />
       <Work />
       <Services />
       <About />
@@ -60,20 +70,15 @@ export async function getStaticProps({ preview, previewData }) {
 
 export default Index;
 
-const Hero = ({ title, subtitle }) => {
+const Hero = ({ image, title, subtitle }) => {
   return (
     <header className="w-full min-h-screen max-h-screen relative flex flex-col justify-center text-white">
       <div className="relative z-10 container mx-auto">
         <h2 className="text-6xl leading-normal whitespace-pre">
-          {/* Still life’s that will make <br /> your product feel alive. */}
           {title}
         </h2>
-        <p className="mt-4 text-2xl leading-normal">
-          {/* I’m a product photographer helping brands communicate
-          <br />
-          their values in a candid, subtile and sophisticated
-          language. */}
 
+        <p className="mt-4 text-2xl leading-normal whitespace-pre">
           {subtitle}
         </p>
 
@@ -85,7 +90,7 @@ const Hero = ({ title, subtitle }) => {
       <div className="absolute inset-0">
         <img
           className="w-full h-full object-cover"
-          src="/hero-index.jpg"
+          src={image}
           alt=""
         />
       </div>
