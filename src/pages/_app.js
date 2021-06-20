@@ -1,3 +1,5 @@
+import 'tailwindcss/tailwind.css';
+
 import { useEffect, useMemo } from 'react';
 import Head from 'next/head';
 
@@ -20,8 +22,7 @@ import { NextGithubMediaStore } from 'next-tinacms-github';
 
 import ProjectCreatorPlugin from '../cms/plugins/ProjectCreatorPlugin';
 
-import '../styles/globals.css';
-import 'tailwindcss/tailwind.css';
+// import '../styles/globals.css';
 
 const github = new GithubClient({
   proxy: '/api/proxy-github',
