@@ -96,6 +96,7 @@ const Work = ({ file, preview }) => {
 
 export async function getStaticProps({ preview, previewData }) {
   if (preview) {
+    console.log(previewData);
     return getGithubPreviewProps({
       ...previewData,
       fileRelativePath: 'content/home.json',

@@ -45,6 +45,22 @@
 //   },
 // };
 
+import { fields } from '../../pages/work/[slug]';
+
+export const getCachedFormData = (id) => {
+  if (typeof localStorage === 'undefined') {
+    return {};
+  }
+  return JSON.parse(localStorage.getItem(id) || '{}');
+};
+
+export const setCachedFormData = (id, data) => {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+  localStorage.setItem(id, JSON.stringify(data));
+};
+
 export class MarkdownCreatorPlugin {
   __type = 'content-creator';
   name;
@@ -78,23 +94,36 @@ export class MarkdownCreatorPlugin {
   }
 
   async onSubmit(form, cms) {
-    console.log('HERE');
+    console.log('HERE', cms);
     const fileRelativePath = `content/work/test.json`;
     const content = form;
 
-    console.log(form);
     // const frontmatter = await this.frontmatter(form);
     // const markdownBody = await this.body(form);
 
-    await cms.api.git?.onChange({
-      fileRelativePath,
-      content: JSON.stringify(content, null, 2),
-    });
+    try {
+      // await cms.api.github?.onChange({
+      //   fileRelativePath,
+      //   content: JSON.stringify(content, null, 2),
+      // });
 
-    await cms.api.git.commit({
-      files: [fileRelativePath],
-      message: `Commit from Tina: Created ${fileRelativePath}`,
-    });
+      const response = await cms.api.github.commit(
+        fileRelativePath,
+        getCachedFormData(fileRelativePath).sha,
+        JSON.stringify(content, null, 2),
+        'Update from TinaCMS',
+      );
+
+      setCachedFormData(fileRelativePath, {
+        sha: response.content.sha,
+      });
+
+      if (this.afterCreate) {
+        this.afterCreate(response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
     // cms.api.github
     //   .commit(
@@ -128,27 +157,7 @@ const BlogPostCreatorPlugin = new MarkdownCreatorPlugin({
     const slug = form.title;
     return `content/blog/${slug}.md`;
   },
-  fields: [
-    {
-      name: 'title',
-      component: 'text',
-      label: 'Title',
-      placeholder: 'My New Post',
-      description: 'The title of the new blog post.',
-    },
-    {
-      label: 'Date',
-      name: 'date',
-      component: 'date',
-      description: 'The default will be today',
-    },
-    {
-      label: 'Author',
-      description: 'Who wrote this, yo?',
-      name: 'author',
-      component: 'text',
-    },
-  ],
+  fields,
   frontmatter: (postInfo) => ({
     // title: postInfo.title,
     // date: moment(postInfo.date ? postInfo.date : new Date()).format(),

@@ -99,6 +99,65 @@ const PAGE_BLOCKS = {
   },
 };
 
+export const fields = [
+  {
+    label: 'Hero Image',
+    name: 'image',
+    component: 'image',
+    parse: (media) => {
+      return media.previewSrc;
+    },
+
+    // Decide the file upload directory for the post
+    // uploadDir: () => '/public/static/',
+
+    // Generate the src attribute for the preview image.
+    previewSrc: (src) => src,
+  },
+
+  // price: Float
+  // deposits: [Deposit]
+
+  // legal: TripLegal
+  // organisation: TripOrganisation
+  // payment: TripPayment
+  // informations: [TripInformation]
+  // itinerary: [Itinerary]
+  {
+    name: 'title',
+    label: 'Title',
+    component: 'text',
+  },
+  {
+    name: 'tags',
+    label: 'Tags',
+    component: 'tags',
+  },
+  {
+    name: 'summary',
+    label: 'Summary',
+    component: 'textarea',
+  },
+
+  // {
+  //   label: 'Blocks',
+  //   name: 'blocks',
+  //   component: 'blocks',
+  //   templates: {
+  //     image: {
+  //       label: 'Content',
+  //       key: 'content-block',
+  //       defaultItem: {
+  //         content: '',
+  //       },
+  //       fields: [{ name: 'src', label: 'Image', component: 'image' }],
+  //     },
+  //     // 'image-block': ImageBlock,
+  //     // 'content-block': ContentBlock,
+  //   },
+  // },
+];
+
 const Project = () => {
   const cms = useCMS();
 
@@ -119,46 +178,7 @@ const Project = () => {
         { _template: 'image', src: '/project2.png' },
       ],
     },
-    fields: [
-      {
-        label: 'Hero Image',
-        name: 'image',
-        component: 'image',
-        parse: (media) => {
-          return media.previewSrc;
-        },
-
-        // Decide the file upload directory for the post
-        // uploadDir: () => '/public/static/',
-
-        // Generate the src attribute for the preview image.
-        previewSrc: (src) => src,
-      },
-
-      // price: Float
-      // deposits: [Deposit]
-
-      // legal: TripLegal
-      // organisation: TripOrganisation
-      // payment: TripPayment
-      // informations: [TripInformation]
-      // itinerary: [Itinerary]
-      {
-        name: 'title',
-        label: 'Title',
-        component: 'text',
-      },
-      {
-        name: 'tags',
-        label: 'Tags',
-        component: 'tags',
-      },
-      {
-        name: 'summary',
-        label: 'Summary',
-        component: 'textarea',
-      },
-    ],
+    fields,
     onSubmit: async (values) => {
       try {
         cms.alerts.success('Changes Saved!');
