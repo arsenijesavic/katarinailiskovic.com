@@ -46,7 +46,7 @@
 
 import { fields } from '../../pages/work/[slug]';
 
-import { ActionButton, useCMS, usePlugin } from 'tinacms';
+import slugify from 'slugify';
 
 export const getCachedFormData = (id) => {
   if (typeof localStorage === 'undefined') {
@@ -95,12 +95,9 @@ export class MarkdownCreatorPlugin {
   }
 
   async onSubmit(form, cms) {
-    const fileRelativePath = `content/work/test.json`;
-    const content = form;
-
-    // const frontmatter = await this.frontmatter(form);
-    // const markdownBody = await this.body(form);
-
+    const fileRelativePath = await this.filename(form);
+    const content = await this.body(form);
+    console.log({ fileRelativePath, content });
     try {
       // await cms.api.github?.onChange({
       //   fileRelativePath,
@@ -153,9 +150,8 @@ export class MarkdownCreatorPlugin {
 const BlogPostCreatorPlugin = new MarkdownCreatorPlugin({
   label: 'New Project',
   filename: (form) => {
-    // const slug = slugify(form.title)
-    const slug = form.title;
-    return `content/blog/${slug}.md`;
+    const slug = slugify(form.title);
+    return `content/work/${slug}.json`;
   },
   fields,
   frontmatter: (postInfo) => ({
@@ -163,10 +159,11 @@ const BlogPostCreatorPlugin = new MarkdownCreatorPlugin({
     // date: moment(postInfo.date ? postInfo.date : new Date()).format(),
     // author: postInfo.author ? postInfo.author : `Jane Doe`,
   }),
-  body: () => `New post, who dis?`,
+  body: (_) => _,
   afterCreate: (response) => {
+    const { name } = response.content;
     // let url = fileToUrl(response.content.path.split('content')[1], 'blog')
-    // window.location.href = `/blog/${url}`
+    window.location.href = `/work/${name}`;
   },
 });
 

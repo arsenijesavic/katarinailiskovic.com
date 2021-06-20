@@ -1,126 +1,61 @@
-import { useEffect } from 'react';
 import Link from 'next/link';
 
-import {
-  getGithubPreviewProps,
-  parseJson,
-} from 'next-tinacms-github';
-import {
-  useGithubJsonForm,
-  useGithubToolbarPlugins,
-} from 'react-tinacms-github';
+// const PROJECTS = [
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work1.png',
+//   },
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work2.png',
+//   },
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work3.png',
+//   },
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work4.png',
+//   },
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work5.png',
+//   },
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work6.png',
+//   },
+//   {
+//     slug: 'weeding-celebration',
+//     title: 'Weeding Celebration',
+//     categories: ['stil life', 'editorial'],
+//     image: '/work7.png',
+//   },
+// ];
 
-import { ActionButton, useCMS, usePlugin } from 'tinacms';
-import ProjectCreatorPlugin from 'cms/plugins/ProjectCreatorPlugin';
-
-const PROJECTS = [
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work1.png',
-  },
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work2.png',
-  },
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work3.png',
-  },
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work4.png',
-  },
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work5.png',
-  },
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work6.png',
-  },
-  {
-    slug: 'weeding-celebration',
-    title: 'Weeding Celebration',
-    categories: ['stil life', 'editorial'],
-    image: '/work7.png',
-  },
-];
-
-export function DeleteAction({ form }) {
-  const cms = useCMS();
-  return (
-    <ActionButton
-      onClick={async () => {
-        if (
-          !confirm(
-            `Are you sure you want to delete ${form.values.fileRelativePath}?`,
-          )
-        ) {
-          return;
-        }
-        await cms.api.github.onDelete({
-          relPath: form.values.fileRelativePath,
-        });
-
-        window.history.back();
-      }}
-    >
-      Delete
-    </ActionButton>
-  );
-}
-
-const Work = ({ file, preview }) => {
-  const formOptions = {
-    label: 'Work Page',
-    actions: [DeleteAction],
-
-    fields: [
-      {
-        label: 'Hero Image',
-        name: 'image',
-        component: 'image',
-        parse: (media) => media.previewSrc,
-        // Decide the file upload directory for the post
-        // uploadDir: () => '/public/static/',
-
-        // Generate the src attribute for the preview image.
-        previewSrc: (src) => src,
-      },
-      { label: 'Title', name: 'title', component: 'textarea' },
-      { label: 'Subtitle', name: 'subtitle', component: 'textarea' },
-    ],
-  };
-
-  const [data, form] = useGithubJsonForm(file, formOptions);
-  usePlugin(form);
-  usePlugin(ProjectCreatorPlugin);
-
-  useGithubToolbarPlugins();
-
-  const cms = useCMS();
-
+const Work = ({ data, preview }) => {
+  console.log(data);
   return (
     <>
       {/* <Hero /> */}
-      <ProjectList data={PROJECTS} />
+      <ProjectList data={data} />
     </>
   );
 };
 
-export async function getStaticProps({ preview, previewData }) {
+export async function getStaticProps({ preview }) {
   if (preview) {
     try {
       return getGithubPreviewProps({
@@ -133,7 +68,7 @@ export async function getStaticProps({ preview, previewData }) {
     }
   }
 
-  const projects = ((context) => {
+  const data = ((context) => {
     const keys = context.keys();
     const values = keys.map(context);
     const data = keys.map((key, index) => {
@@ -157,16 +92,10 @@ export async function getStaticProps({ preview, previewData }) {
     return data;
   })(require.context('../../../content/work', true, /\.json$/));
 
-  console.log(projects);
-  const data = await import('../../../content/home.json');
-
   return {
     props: {
-      preview: false,
-      file: {
-        fileRelativePath: 'content/home.json',
-        data: data?.default,
-      },
+      data,
+      preview,
     },
   };
 }

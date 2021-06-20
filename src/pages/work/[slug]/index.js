@@ -1,31 +1,27 @@
-import Head from 'next/head';
 import Image from 'next/image';
 
 import Link from 'next/link';
 
+import { usePlugin, useCMS } from 'tinacms';
+
 import {
-  getGithubPreviewProps,
-  parseJson,
-} from 'next-tinacms-github';
+  BlocksControls,
+  InlineBlocks,
+  InlineForm,
+  InlineImage,
+} from 'react-tinacms-inline';
+
 import {
   useGithubJsonForm,
   useGithubToolbarPlugins,
 } from 'react-tinacms-github';
 
-import { useForm, usePlugin, useCMS } from 'tinacms';
 import {
-  BlocksControls,
-  InlineBlocks,
-  InlineField,
-  InlineForm,
-  InlineImage,
-  InlineText,
-  InlineTextarea,
-  AddBlockMenu,
-  useInlineForm,
-  useInlineBlocks,
-  FocusRing,
-} from 'react-tinacms-inline';
+  getGithubPreviewProps,
+  parseJson,
+} from 'next-tinacms-github';
+
+import DeleteAction from '../../../cms/actions/Delete';
 
 const BlockImage = ({ data, index }) => {
   return (
@@ -138,8 +134,8 @@ export const fields = [
     component: 'text',
   },
   {
-    name: 'tags',
-    label: 'Tags',
+    name: 'categories',
+    label: 'Categories',
     component: 'tags',
   },
   {
@@ -171,26 +167,15 @@ const Project = ({ file, preview }) => {
   const cms = useCMS();
 
   const formConfig = {
-    id: 10,
-    label: 'Hero',
-    initialValues: {},
+    actions: [DeleteAction],
     fields,
-    onSubmit: async (values) => {
-      try {
-        cms.alerts.success('Changes Saved!');
-      } catch (error) {
-        cms.alerts.error('Uh oh something went wrong!');
-      }
-
-      return Promise.resolve();
-    },
+    label: 'Project',
   };
 
-  const [data, form] = useGithubJsonForm(file, formOptions);
+  const [data, form] = useGithubJsonForm(file, formConfig);
 
   usePlugin(form);
 
-  console.log(data);
   const moreProjects = [
     { title: 'Soap', href: 'soap', image: { src: '/more1.png' } },
     {
@@ -200,27 +185,28 @@ const Project = ({ file, preview }) => {
     },
     { title: 'Future', href: 'future', image: { src: '/more3.png' } },
   ];
+
   return (
     <>
       <header className="w-full min-h-screen max-h-screen relative flex flex-col justify-center text-white">
         <div className="relative z-10 container mx-auto">
-          <h2 className="text-6xl leading-normal">{values?.title}</h2>
+          <h2 className="text-6xl leading-normal">{data?.title}</h2>
           <ul className="flex space-x-4">
-            {values?.tags?.map((tag, index) => (
+            {data?.tags?.map((tag, index) => (
               <li key={index} className="tag">
                 {tag}
               </li>
             ))}
           </ul>
           <p className="mt-4 text-2xl leading-normal w-10/12">
-            {values.summary}
+            {data?.summary}
           </p>
         </div>
 
         <div className="absolute inset-0">
           <img
             className="w-full h-full object-cover"
-            src="/work-hero.png"
+            src={data?.image}
             alt=""
           />
         </div>
@@ -272,7 +258,7 @@ export async function getStaticPaths() {
   })(require.context(`../../../../content/work`, true, /\.json$/));
 
   const paths = projects.map((_) => `/work/${_.slug}`);
-  console.log(paths);
+
   return { paths, fallback: 'blocking' };
 }
 
@@ -281,8 +267,7 @@ export async function getStaticProps({
   preview,
   previewData,
 }) {
-  const fileRelativePath = `content/work/${params.slug}`;
-  console.log(fileRelativePath);
+  const fileRelativePath = `content/work/${params.slug}.json`;
   if (preview) {
     try {
       return getGithubPreviewProps({
@@ -300,7 +285,7 @@ export async function getStaticProps({
       preview: false,
       file: {
         fileRelativePath,
-        data: data?.default,
+        // data: data?.default,
       },
     },
     // revalidate: 10,
