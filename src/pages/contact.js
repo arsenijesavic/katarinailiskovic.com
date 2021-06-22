@@ -35,9 +35,9 @@ const ContactPage = ({ file }) => {
         </div>
       </header> */}
 
-      <header className="container mx-auto py-24 flex justify-between items-start">
-        <div className="flex-1 pr-8">
-          <div className="prose prose-2xl">
+      <header className="container mx-auto px-4 sm:px-0 py-16 sm:py-24 flex flex-wrap justify-between items-start">
+        <div className="w-full sm:flex-1 sm:pr-8">
+          <div className="prose prose-xl sm:prose-2xl">
             <InlineForm form={form}>
               <InlineWysiwyg name="body" format="markdown">
                 <Markdown>{data?.body}</Markdown>
@@ -46,7 +46,7 @@ const ContactPage = ({ file }) => {
           </div>
         </div>
 
-        <div className="w-6/12">
+        <div className="w-full mt-8 sm:mt-0 sm:w-6/12">
           <form className="mt-8 max-w-md">
             <div className="grid grid-cols-1 gap-6">
               <label className="block">
@@ -83,7 +83,7 @@ const ContactPage = ({ file }) => {
                   rows="6"
                 ></textarea>
               </label>
-              <button className="bg-accent-indigo hover:bg-opacity-80 text-white text-xl font-bold py-3 px-8 rounded-full mt-6">
+              <button className="bg-accent-indigo hover:bg-opacity-80 text-white text-base sm:text-xl font-bold py-3 px-8 rounded-full mt-6">
                 Submit
               </button>
             </div>

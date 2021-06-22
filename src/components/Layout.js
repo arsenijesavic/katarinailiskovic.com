@@ -46,7 +46,7 @@ const Header = () => {
             {NAVIGATION.map((item, index) => (
               <li key={index}>
                 <Link href={item.url}>
-                  <a className="text-gray-600 hover:text-accent-indigo">
+                  <a className="hover:text-accent-indigo">
                     {item.name}
                   </a>
                 </Link>
