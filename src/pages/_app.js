@@ -1,5 +1,3 @@
-import 'tailwindcss/tailwind.css';
-
 import { useEffect, useMemo } from 'react';
 import Head from 'next/head';
 
@@ -21,6 +19,8 @@ import {
 import { NextGithubMediaStore } from 'next-tinacms-github';
 
 import ProjectCreatorPlugin from '../cms/plugins/ProjectCreatorPlugin';
+
+import 'tailwindcss/tailwind.css';
 
 // import '../styles/globals.css';
 
@@ -169,10 +169,11 @@ export const EditButton = ({ cms }) => {
         zIndex: '9999999',
         backgroundColor: 'blue',
         color: 'white',
+        padding: '1rem',
       }}
       onClick={() => (cms.enabled ? cms.disable() : cms.enable())}
     >
-      {cms.enabled ? 'Stop edit' : 'edit the blog'}
+      {cms.enabled ? 'Stop edit' : 'edit'}
     </button>
   );
 };

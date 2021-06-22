@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <Head>
         <title>Katarina Ilišković</title>
       </Head>
-      <div className=" text-gray-900">
+      <div className="text-gray-900">
         <Header />
         <main>{children}</main>
         <Footer />
@@ -29,7 +29,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="py-8 text-white fixed left-0 right-0 top-0 z-50 text-gray-900">
+    <header className="hidden sm:block py-8 fixed left-0 right-0 top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <Link href="/">
@@ -46,7 +46,9 @@ const Header = () => {
             {NAVIGATION.map((item, index) => (
               <li key={index}>
                 <Link href={item.url}>
-                  <a>{item.name}</a>
+                  <a className="text-gray-600 hover:text-accent-indigo">
+                    {item.name}
+                  </a>
                 </Link>
               </li>
             ))}
@@ -59,15 +61,15 @@ const Header = () => {
 
 const Footer = () => {
   return (
-    <footer>
-      <div className="bg-accent-cream py-8">
-        <div className="container mx-auto  flex justify-between">
-          <div className="w-4/12">
+    <footer className="bg-accent-cream">
+      <div className="container mx-auto px-4 sm:px-0 py-8">
+        <div className="flex justify-between flex-wrap">
+          <div className="w-full sm:w-4/12">
             <p className="text-gray-600">Available for bookings</p>
             <p className="font-bold">WORLDWIDE</p>
           </div>
 
-          <div className="w-4/12">
+          <div className="w-full sm:w-4/12">
             <p className="text-gray-600">Let’s get in touch </p>
             <p className="font-bold">
               <a href="mailto:iliskovickatarina@gmail.com">
@@ -75,12 +77,13 @@ const Footer = () => {
               </a>
             </p>
           </div>
-          <div className="w-4/12">
+          <div className="w-full sm:w-4/12">
             <p className="text-gray-600">Follow me on</p>
           </div>
         </div>
       </div>
-      <div className="text-center text-base py-6 bg-accent-purple text-white">
+
+      <div className="text-center text-sm sm:text-base py-4 bg-accent-purple text-white">
         <p>Katarina Ilišković © 2021 All Rights Reserved</p>
       </div>
     </footer>

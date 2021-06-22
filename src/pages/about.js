@@ -1,7 +1,7 @@
 import Markdown from 'react-markdown';
 
 import { usePlugin } from 'tinacms';
-import { InlineForm } from 'react-tinacms-inline';
+import { InlineForm, InlineImage } from 'react-tinacms-inline';
 import { InlineWysiwyg } from 'react-tinacms-editor';
 import { useGithubJsonForm } from 'react-tinacms-github';
 import {
@@ -16,31 +16,33 @@ const About = ({ file }) => {
   });
 
   usePlugin(form);
-
+  console.log(data);
   return (
-    <>
-      <header className="container mx-auto min-h-screen py-24 flex justify-between">
-        <div className="w-6/12 pr-8 ">
-          <div className="prose prose-xl">
-            <InlineForm form={form}>
+    <InlineForm form={form}>
+      <header className="container mx-auto min-h-screen py-24 px-4 sm:px-0">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full mt-8 sm:mt-0 sm:w-6/12 sm:pr-8">
+            <div className="prose sm:prose-xl">
               <InlineWysiwyg name="body" format="markdown">
                 <Markdown>{data?.body}</Markdown>
               </InlineWysiwyg>
-            </InlineForm>
+            </div>
+          </div>
+
+          <div className="w-full sm:w-6/12 sm:min-h-screen sm:pb-32 order-first sm:order-last">
+            <InlineImage name="image">
+              <figure className="w-full h-full">
+                <img
+                  className="w-full h-full object-cover"
+                  src={data?.image?.previewSrc}
+                  alt=""
+                />
+              </figure>
+            </InlineImage>
           </div>
         </div>
-
-        <div className="w-6/12 min-h-screen pb-32">
-          <figure className="w-full h-full">
-            <img
-              className="w-full h-full object-cover"
-              src="/hero-about.jpg"
-              alt=""
-            />
-          </figure>
-        </div>
       </header>
-    </>
+    </InlineForm>
   );
 };
 
