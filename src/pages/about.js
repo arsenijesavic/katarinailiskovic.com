@@ -16,7 +16,7 @@ const About = ({ file }) => {
   });
 
   usePlugin(form);
-
+  console.log(data);
   return (
     <InlineForm form={form}>
       <header className="container mx-auto min-h-screen py-24 px-4 sm:px-0">
@@ -30,10 +30,9 @@ const About = ({ file }) => {
           </div>
 
           <div className="w-full sm:w-6/12 sm:min-h-screen sm:pb-32 order-first sm:order-last">
-            <InlineImage key="1" name="image">
+            <InlineImage name="image">
               {(props) => (
                 <figure className="w-full h-full">
-                  {console.log(props)}
                   <img
                     className="w-full h-full object-cover"
                     src={data?.image?.previewSrc}

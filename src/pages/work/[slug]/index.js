@@ -1,8 +1,6 @@
-import Image from 'next/image';
-
 import Link from 'next/link';
 
-import { usePlugin, useCMS } from 'tinacms';
+import { usePlugin } from 'tinacms';
 
 import {
   BlocksControls,
@@ -11,10 +9,7 @@ import {
   InlineImage,
 } from 'react-tinacms-inline';
 
-import {
-  useGithubJsonForm,
-  useGithubToolbarPlugins,
-} from 'react-tinacms-github';
+import { useGithubJsonForm } from 'react-tinacms-github';
 
 import {
   getGithubPreviewProps,
