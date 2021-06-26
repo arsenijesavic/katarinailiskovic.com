@@ -18,7 +18,7 @@ const About = ({ file }) => {
   usePlugin(form);
 
   return (
-    <InlineForm form={form}>
+    <InlineForm form={form} initialStatus={'active'}>
       <header className="container mx-auto min-h-screen py-24 px-4 sm:px-0">
         <div className="flex flex-wrap justify-between">
           <div className="w-full mt-8 sm:mt-0 sm:w-6/12 sm:pr-8">
@@ -37,7 +37,8 @@ const About = ({ file }) => {
                 alt=""
               />
             </figure>
-            {/* <InlineImage name="image" className="w-full h-full">
+
+            {/* <InlineImage name="image" parse={(_) => _.previewSrc}>
               {(props) => (
                 <figure className="w-full h-full">
                   <img
